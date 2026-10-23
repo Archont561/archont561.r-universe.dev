@@ -80,9 +80,3 @@ The package catalog is configured in [`packages.json`](./packages.json):
 - **JSON API (Catalog)**: [https://archont561.r-universe.dev/api/packages](https://archont561.r-universe.dev/api/packages)
 - **JSON API (`playtest`)**: [https://archont561.r-universe.dev/api/packages/playtest](https://archont561.r-universe.dev/api/packages/playtest)
 - **Build Badges**: `https://archont561.r-universe.dev/badges/:package`
-
----
-
-## Automation
-
-Registry updates are managed idempotently using the project’s automation tooling (`configure_runiverse.py`).
