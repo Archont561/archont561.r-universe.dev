@@ -1,0 +1,87 @@
+name: Discover R packages
+
+# Regenerates packages.json by scanning Archont561/* for R packages
+# (a DESCRIPTION file with a Package: field), then rebuilds the
+# released-packages table in README.md from the result, and opens a
+# pull request when either file would change. Merging that PR is what
+# makes r-universe pick registry changes up; already-registered
+# packages are tracked by r-universe itself, so a daily scan is
+# plenty -- and it is also what notices new upstream releases.
+
+on:
+  schedule:
+    - cron: "17 4 * * *" # daily, 04:17 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only print the would-be packages.json and README table (no PR)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: discover-packages
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    name: Sync registry and README package table
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out registry
+        uses: actions/checkout@v4
+
+      - name: Discover R packages and rebuild README table
+        env:
+          # Public-repo reads only; the workflow token is enough.
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            python3 .github/scripts/discover.py --dry-run
+            python3 .github/scripts/update_readme.py --dry-run
+          else
+            python3 .github/scripts/discover.py
+            python3 .github/scripts/update_readme.py
+          fi
+
+      - name: Open pull request if the registry or README changed
+        if: github.event_name == 'schedule' || inputs.dry_run != true
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ github.token }}
+          add-paths: |
+            packages.json
+            README.md
+          branch: auto/registry-sync
+          delete-branch: true
+          commit-message: "chore(registry): sync package registry and README table"
+          title: "chore(registry): sync package registry and README table"
+          body: |
+            Automated registry discovery found changes to `packages.json`
+            and/or the released-packages table in `README.md`.
+
+            **How this was generated:**
+            - `.github/scripts/discover.py` scanned every public, non-fork,
+              non-archived `Archont561/*` repository for a `DESCRIPTION` file
+              and derived each entry from it (`Package:` field, repo URL,
+              subdirectory). Existing per-package fields such as `branch`
+              were preserved, as were manual entries outside `Archont561/*`.
+            - `.github/scripts/update_readme.py` rebuilt the table between
+              the `released-packages` markers in `README.md`. A package
+              tracking `"branch": "*release"` appears in the table once it
+              has a published GitHub release.
+
+            **Before merging, please check:**
+            - New entries really should be published on this universe
+              (exclude repos/packages in `.github/registry-discovery.json` otherwise).
+            - Removed entries are intentional (repo deleted, renamed, or `DESCRIPTION` gone).
+            - Entries tracking `"branch": "*release"` have a published GitHub
+              release -- see the warnings in the workflow run summary.
+
+            Per-package overrides (e.g. `branch`) live in
+            `.github/registry-discovery.json`; edits made to `packages.json`
+            in this PR are preserved by future discovery runs. To register a
+            package by hand, use `.github/scripts/add_package.py`.
