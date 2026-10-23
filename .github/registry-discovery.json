@@ -1,0 +1,11 @@
+{
+  "owner": "Archont561",
+  "exclude_repos": [],
+  "exclude_packages": [],
+  "max_description_depth": 2,
+  "overrides": {
+    "playtest": {
+      "branch": "*release"
+    }
+  }
+}
