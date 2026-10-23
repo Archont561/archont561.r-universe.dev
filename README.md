@@ -1,82 +1,43 @@
 # Archont561 R-Universe
 
-[![playtest status badge](https://archont561.r-universe.dev/badges/playtest)](https://archont561.r-universe.dev/playtest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+Welcome to the personal R package universe for [@Archont561](https://github.com/Archont561), powered by the [r-universe.dev](https://r-universe.dev) platform.
 
-Personal CRAN-like package repository for [@Archont561](https://github.com/Archont561), powered by [R-universe](https://r-universe.dev).
+This repository serves as the central manifest and distribution hub for R packages developed and maintained across this ecosystem.
 
-This universe provides automated, cross-platform builds and pre-compiled binaries (Linux, macOS, Windows) for R packages developed in this ecosystem.
+### What is this Universe?
 
----
+This universe functions as an autonomous, CRAN-compatible package repository that bridges development repositories with end-user R environments:
 
-## Published Packages
+- **Automated Multi-Platform Binaries**: Packages are continuously built, tested, and compiled into native binaries for Windows, macOS (Apple Silicon & Intel), and multiple Linux distributions.
+- **Zero-Dependency Installation**: Users can install packages with standard base R `install.packages()` without requiring local C/C++ toolchains, compilers, or GitHub authentication tokens.
+- **Automated Tracking & Synchronization**: Tracks upstream Git repositories and tags, regenerating binaries, manual pages, and documentation whenever releases are published.
+- **REST APIs & Package Feeds**: Provides machine-readable endpoints for package status, dependency trees, commit provenance, and build telemetry.
 
-| Package | Version | Description | Source | Build Status |
-| :--- | :--- | :--- | :--- | :--- |
-| [**`playtest`**](https://archont561.r-universe.dev/playtest) | `0.1.0` | Playwright-style testing framework with dependency-injected fixtures, LIFO teardown, BDD scenarios, and property-based testing | [`Archont561/playtest` (`r/`)](https://github.com/Archont561/playtest) | [![status](https://archont561.r-universe.dev/badges/playtest)](https://archont561.r-universe.dev/playtest) |
+### Connecting to this Universe in R
 
----
-
-## Installation
-
-### In R Console
-
-Enable the universe in your R options to install `playtest` and any future packages as standard CRAN packages:
+To use this universe as an active CRAN mirror in your R session:
 
 ```r
-# Enable the Archont561 universe alongside CRAN
 options(repos = c(
   archont561 = "https://archont561.r-universe.dev",
   CRAN = "https://cloud.r-project.org"
 ))
-
-# Download and install pre-compiled binaries or source
-install.packages("playtest")
 ```
 
-### Using `pak`
+Or using `pak`:
 
 ```r
-# Install directly from the universe
 pak::repo_add(archont561 = "https://archont561.r-universe.dev")
-pak::pkg_install("playtest")
-
-# Or directly from the GitHub repository
-pak::pkg_install("Archont561/playtest?subdir=r")
-```
-
-### Using `remotes`
-
-```r
-remotes::install_github("Archont561/playtest", subdir = "r")
 ```
 
 ---
 
-## Registry Configuration
+### 3. Universe Portal Key Takeaways
 
-The package catalog is configured in [`packages.json`](./packages.json):
-
-```json
-[
-  {
-    "package": "playtest",
-    "url": "https://github.com/Archont561/playtest",
-    "branch": "*release",
-    "subdir": "r"
-  }
-]
-```
-
-- **`subdir: "r"`**: Specifies the relative directory of the R package root within the multi-language repository.
-- **`branch: "*release"`**: Instructs R-universe to automatically track and build tagged GitHub releases (`v*`, `r-v*`).
-
----
-
-## API & Endpoints
-
-- **Universe Web Portal**: [https://archont561.r-universe.dev](https://archont561.r-universe.dev)
-- **Package Details**: [https://archont561.r-universe.dev/playtest](https://archont561.r-universe.dev/playtest)
-- **JSON API (Catalog)**: [https://archont561.r-universe.dev/api/packages](https://archont561.r-universe.dev/api/packages)
-- **JSON API (`playtest`)**: [https://archont561.r-universe.dev/api/packages/playtest](https://archont561.r-universe.dev/api/packages/playtest)
-- **Build Badges**: `https://archont561.r-universe.dev/badges/:package`
+| Attribute | Details |
+| :--- | :--- |
+| **Web Portal** | `https://archont561.r-universe.dev` |
+| **Repository Type** | CRAN-like repository (source tarballs + multi-OS binaries) |
+| **Registry File** | `packages.json` |
+| **Supported Platforms** | Linux (`x86_64`), Windows (`x86_64`), macOS (`arm64`, `x86_64`) |
+| **Primary Topics** | `r`, `cran`, `r-universe`, `package-registry`, `r-packages` |
