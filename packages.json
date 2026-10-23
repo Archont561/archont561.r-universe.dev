@@ -1,0 +1,8 @@
+[
+  {
+    "package": "playtest",
+    "url": "https://github.com/Archont561/playtest",
+    "branch": "*release",
+    "subdir": "r"
+  }
+]
