@@ -36,8 +36,6 @@ pak::repo_add(archont561 = "https://archont561.r-universe.dev")
 
 _No released packages yet._
 
-_Awaiting first release: [`playtest`](https://github.com/Archont561/playtest)._
-
 <!-- END: released-packages -->
 
 ### Automated Registry Discovery
